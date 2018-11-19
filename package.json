@@ -1,0 +1,26 @@
+{
+  "name": "holidays-kr",
+  "version": "1.0.0",
+  "description": "data.go.kr 데이터 기반 공휴일 수집",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ndotcom/holidays-kr.git"
+  },
+  "author": {
+    "name": "N.com",
+    "email": "ndotcom@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ndotcom/holidays-kr/issues"
+  },
+  "homepage": "https://github.com/ndotcom/holidays-kr#readme",
+  "dependencies": {
+    "fast-xml-parser": "^3.12.7",
+    "request": "^2.88.0"
+  }
+}
