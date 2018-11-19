@@ -1,4 +1,4 @@
-# holidays-kr v0.1.0
+# holidays-kr v1.0.0
 
 ## Description
 
