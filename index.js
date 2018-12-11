@@ -18,53 +18,76 @@ const getHolidaysByMonth = function(year, month){
 
     return new Promise(function (resolve, reject) {
         request(url, function (error, response, body) {
-
-            if (!error && response.statusCode === 200) {
-                if (parser.validate(body) === true) {
-                    /*
-                     {
-                        items : {
-                            item : [   항목이 1개일 경우엔 item에 Array가 아니라 Object로 바로 들어가 있음, 0개일 경우엔 '' 가 들어가 있음.
-                                ...
-                            ]
-                        },
-                        numOfRows: [Number],
-                        pageNo: [Number],
-                        totalCount: [Number]
-                     }
-                     */
-                    const data = parser.parse(body).response.body;
-                    const holidays = [];
-                    const addDay = item => {
-                        if (item.isHoliday !== 'Y') return;
-
-                        item.locdate += '';
-
-                        const pushItem = {
-                            name: item.dateName,
-                            year: parseInt(item.locdate.substr(0, 4)),
-                            month: parseInt(item.locdate.substr(4, 2)),
-                            day: parseInt(item.locdate.substr(6, 2))
-                        };
-                        pushItem.date = [pushItem.year, zerofill(pushItem.month, 2), zerofill(pushItem.day, 2)].join('-');
-
-                        holidays.push(pushItem);
-                    };
-
-
-                    if (data.totalCount && data.totalCount > 1) {
-                        data.items.item.forEach(item => {
-                            addDay(item);
-                        });
-                    } else if (data.totalCount === 1) {
-                        addDay(data.items.item);
-                    }
-
-                    resolve(holidays);
-                }
-                reject(Error('XML 파싱 실패'));
+            if (error || response.statusCode !== 200) {
+                reject(error);
+                return;
             }
-            reject(error);
+
+            if (response.statusCode !== 200) {
+                reject(new Error('HTTP Error'));
+                return;
+            }
+
+            if (!parser.validate(body)) {
+                reject(new Error('XML parsing failed'));
+                return;
+            }
+
+            const parsedXml = parser.parse(body);
+
+            if (parsedXml.OpenAPI_ServiceResponse && parsedXml.OpenAPI_ServiceResponse.cmmMsgHeader) {
+                const header = parsedXml.OpenAPI_ServiceResponse.cmmMsgHeader;
+
+                reject(new Error(header.returnAuthMsg || header.errMsg || header.returnReasonCode));
+                return;
+            }
+
+            if(!parsedXml.response || !parsedXml.response.body) {
+                reject(new Error('Response format error'));
+                return;
+            }
+
+            /*
+             {
+                items : {
+                    item : [   항목이 1개일 경우엔 item에 Array가 아니라 Object로 바로 들어가 있음, 0개일 경우엔 '' 가 들어가 있음.
+                        ...
+                    ]
+                },
+                numOfRows: [Number],
+                pageNo: [Number],
+                totalCount: [Number]
+             }
+             */
+            const data = parsedXml.response.body;
+            const holidays = [];
+            const addDay = item => {
+                if (item.isHoliday !== 'Y') return;
+
+                item.locdate += '';
+
+                const pushItem = {
+                    name: item.dateName,
+                    year: parseInt(item.locdate.substr(0, 4)),
+                    month: parseInt(item.locdate.substr(4, 2)),
+                    day: parseInt(item.locdate.substr(6, 2))
+                };
+                pushItem.date = [pushItem.year, zerofill(pushItem.month, 2), zerofill(pushItem.day, 2)].join('-');
+
+                holidays.push(pushItem);
+            };
+
+
+            if (data.totalCount && data.totalCount > 1) {
+                data.items.item.forEach(item => {
+                    addDay(item);
+                });
+            } else if (data.totalCount === 1) {
+                addDay(data.items.item);
+            }
+
+            resolve(holidays);
+
         });
     });
 
