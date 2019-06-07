@@ -1,6 +1,6 @@
 {
   "name": "holidays-kr",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "data.go.kr 데이터 기반 공휴일 수집",
   "main": "index.js",
   "scripts": {
