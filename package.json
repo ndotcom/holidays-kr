@@ -1,14 +1,16 @@
 {
   "name": "holidays-kr",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "data.go.kr 데이터 기반 공휴일 수집",
   "keywords": [
     "공휴일",
     "한국",
+    "대한민국",
     "명절",
     "기념일",
-    "holyday",
-    "data.go.kr"
+    "holiday",
+    "data.go.kr",
+    "한국천문연구원"
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
