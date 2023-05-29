@@ -8,8 +8,9 @@
 ## Description
 
 - [공공데이터 포털 특일정보](https://www.data.go.kr/dataset/15012690/openapi.do) 데이터 기반으로 한국 공휴일 데이터 제공
+- 실제 휴일데이터를 받을 수 있습니다.
+  - 선거일, 대체공휴일 같은 수기입력이 필요한 데이터도 전부 이용가능 
 - API가 요청당 한달치 데이터만 주는 것을 원하는 범위만큼 한번에 긁을 수 있도록 하였습니다.
-- 선거일과 대체공휴일 같은 실제 휴일데이터를 이용할 수 있습니다.
 - 한국천문연구원 측에서 수기로 입력한 데이터(대략 앞으로 1년치)만 노출되므로, 무한정 기간의 데이터를 받을 순 없습니다.
 
 ## Installation
@@ -27,7 +28,7 @@ $ yarn add holidays-kr
 ```javascript
 import HolidaysKr from 'holidays-kr';
 
-HolidaysKr.serviceKey = 'your-service-key';
+HolidaysKr.serviceKey = 'your-service-key'; // 디코딩된 서비스키를 사용해야 합니다.
 
 const holidays = await HolidaysKr.getHolidays({
   year: 2023,   // 수집 시작 연도
